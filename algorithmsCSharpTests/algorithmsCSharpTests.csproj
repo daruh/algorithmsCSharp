@@ -25,6 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="GraphsData\tinyCG.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="GraphsData\tinyG.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
