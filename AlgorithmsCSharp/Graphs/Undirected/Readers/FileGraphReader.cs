@@ -1,4 +1,4 @@
-﻿namespace AlgorithmsCSharp.Graphs.Readers;
+﻿namespace AlgorithmsCSharp.Graphs.Undirected.Readers;
 
 public interface IGraphReader
 {

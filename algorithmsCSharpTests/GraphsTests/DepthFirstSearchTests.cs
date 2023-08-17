@@ -1,5 +1,5 @@
-﻿using AlgorithmsCSharp.Graphs.Readers;
-using AlgorithmsCSharp.Graphs.Searches;
+﻿using AlgorithmsCSharp.Graphs.Undirected.Readers;
+using AlgorithmsCSharp.Graphs.Undirected.Searches;
 
 namespace algorithmsCSharpTests.GraphsTests
 {

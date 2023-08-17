@@ -1,13 +1,5 @@
 ﻿using System.Text;
 
-public interface IGraph
-{
-    void AddEdge(int v, int w);
-    IEnumerable<int> Adjacent(int v);
-    int V();
-    int E();
-}
-
 public class Graph : IGraph
 {
     private readonly int _verticies;

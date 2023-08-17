@@ -1,4 +1,4 @@
-using AlgorithmsCSharp.Graphs.Readers;
+using AlgorithmsCSharp.Graphs.Undirected.Readers;
 
 namespace algorithmsCSharpTests.GraphsTests
 {

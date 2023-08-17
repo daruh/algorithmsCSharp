@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlgorithmsCSharp.Graphs.Searches
+namespace AlgorithmsCSharp.Graphs.Undirected.Searches
 {
     public class DepthFirstSearch
     {
@@ -14,7 +14,7 @@ namespace AlgorithmsCSharp.Graphs.Searches
         public DepthFirstSearch(IGraph g, int s)
         {
             marked = new bool[g.V()];
-            dfs(g,s);
+            dfs(g, s);
         }
 
         private void dfs(IGraph g, int v)
