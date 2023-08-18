@@ -104,5 +104,46 @@ namespace algorithmsCSharpTests.RegularExpressions
                 Assert.AreEqual(t.Item2, result);
             }
         }
+
+        [TestMethod]
+        public void TestNFAOneOrs()
+        {
+            var regexp = "(AB|CD)";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("AB", true),
+                new("CD", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestNFAManyOrs()
+        {
+            var regexp = "(AB|CD|EF|GH|IJ)";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("AB", true),
+                new("CD", true),
+                new("EF", true),
+                new("GH", true),
+                new("IJ", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
     }
 }

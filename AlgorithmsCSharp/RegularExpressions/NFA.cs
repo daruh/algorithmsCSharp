@@ -27,16 +27,19 @@ namespace AlgorithmsCSharp.RegularExpressions
                 }
                 else if (re[i] == ')')
                 {
-                    var or = ops.Pop();
-                    if (re[or] == '|')
+
+                    var orOperatorIndexes = new HashSet<int>();
+                    while (re[ops.Peek()] == '|')
                     {
-                        lp = ops.Pop();
-                        G.AddEdge(lp, or + 1);
-                        G.AddEdge(or, i);
+                        int or = ops.Pop();
+                        orOperatorIndexes.Add(or);
                     }
-                    else
+
+                    lp = ops.Pop();
+                    foreach (var orOpIx in orOperatorIndexes)
                     {
-                        lp = or;
+                        G.AddEdge(lp, orOpIx + 1);
+                        G.AddEdge(orOpIx, i);
                     }
                 }
                 //match Set
