@@ -56,13 +56,20 @@ namespace AlgorithmsCSharp.RegularExpressions
                     }
                 }
 
-                if (i < M - 1 && re[i + 1] == '*')
+                if (i < M - 1)
                 {
-                    G.AddEdge(lp, i + 1);
-                    G.AddEdge(i + 1, lp);
+                    if (re[i + 1] == '*')
+                    {
+                        G.AddEdge(lp, i + 1);
+                        G.AddEdge(i + 1, lp);
+                    }
+                    else if (re[i + 1] == '+')
+                    {
+                        G.AddEdge(i + 1, lp);
+                    }
                 }
 
-                if (re[i] == '(' || re[i] == '*' || re[i] == ')' || re[i] == '[' || re[i] == ']')
+                if (re[i] == '(' || re[i] == '*' || re[i] == ')' || re[i] == '[' || re[i] == ']'|| re[i]=='+')
                 {
                     G.AddEdge(i, i + 1);
                 }
@@ -96,14 +103,13 @@ namespace AlgorithmsCSharp.RegularExpressions
                             if (re[v + 1] == '-')
                             {
                                 var leftRangeChar = re[v];
-                                var rightRangeChar = re[v+2];
+                                var rightRangeChar = re[v + 2];
 
                                 if (t >= leftRangeChar && t <= rightRangeChar)
                                 {
                                     var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
                                     match.Add(rightSqBracketIx);
                                 }
-
                             }
                             else if (re[v] == t || re[v] == '.')
                             {

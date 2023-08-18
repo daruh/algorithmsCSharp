@@ -82,8 +82,26 @@ namespace algorithmsCSharpTests.RegularExpressions
             {
                 var result = nfa.Recognizes(t.Item1);
                 Assert.AreEqual(t.Item2, result);
+            }
+        }
 
+        [TestMethod]
+        public void TestNFAOneOrMore()
+        {
+            var regexp = "(A)+B";
+            var nfa = new Nfa(regexp);
 
+            var list = new List<Tuple<string, bool>>
+            {
+                new("AB", true),
+                new("AAB", true),
+                new("AAAA", false),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
             }
         }
     }
