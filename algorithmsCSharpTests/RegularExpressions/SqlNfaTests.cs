@@ -75,6 +75,27 @@ namespace algorithmsCSharpTests.RegularExpressions
         }
 
         [TestMethod]
+        public void TestPercentSign1()
+        {
+            var regexp = "%";
+            var nfa = new SqlNfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("gb", true),
+                // new("ca", true),
+                // new("cb", true),
+                // new("cc", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
         public void TestPercentSign()
         {
             var regexp = "_%";
