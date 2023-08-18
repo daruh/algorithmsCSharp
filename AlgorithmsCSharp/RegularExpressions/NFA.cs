@@ -47,7 +47,12 @@ namespace AlgorithmsCSharp.RegularExpressions
                     for (int ixInBracket = leftOperator + 1; ixInBracket < i; ixInBracket++)
                     {
                         G.AddEdge(leftOperator, ixInBracket);
+
                         _setsMatchMap.Add(ixInBracket, i);
+                        if (re[ixInBracket + 1] == '-')
+                        {
+                            ixInBracket += 2;
+                        }
                     }
                 }
 
@@ -86,10 +91,25 @@ namespace AlgorithmsCSharp.RegularExpressions
                 {
                     if (v < M)
                     {
-                        if (_setsMatchMap.ContainsKey(v) && (re[v] == t || re[v] == '.'))
+                        if (_setsMatchMap.ContainsKey(v))
                         {
-                            var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
-                            match.Add(rightSqBracketIx);
+                            if (re[v + 1] == '-')
+                            {
+                                var leftRangeChar = re[v];
+                                var rightRangeChar = re[v+2];
+
+                                if (t >= leftRangeChar && t <= rightRangeChar)
+                                {
+                                    var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
+                                    match.Add(rightSqBracketIx);
+                                }
+
+                            }
+                            else if (re[v] == t || re[v] == '.')
+                            {
+                                var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
+                                match.Add(rightSqBracketIx);
+                            }
                         }
                         else if (re[v] == t || re[v] == '.')
                         {

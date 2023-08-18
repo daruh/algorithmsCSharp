@@ -31,16 +31,59 @@ namespace algorithmsCSharpTests.RegularExpressions
 
             var list = new List<Tuple<string, bool>>
             {
-                new ("A", true),
-                new("AAAE",true),
-                new("AAAEEE",true),
-                new("AAAEEEI",true),
+                new("A", true),
+                new("AAAE", true),
+                new("AAAEEE", true),
+                new("AAAEEEI", true),
             };
 
             foreach (var t in list)
             {
                 var result = nfa.Recognizes(t.Item1);
                 Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+
+        [TestMethod]
+        public void TestNFARangeSet()
+        {
+            var regexp = "[A-G]";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("C", true),
+                new("CC", false),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestNFARangeSetMany()
+        {
+            var regexp = "([A-G])*";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("C", true),
+                new("CC", true),
+                new("ACCBBDDGG", true),
+                new("Z", false),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+
+
             }
         }
     }
