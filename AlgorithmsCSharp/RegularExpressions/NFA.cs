@@ -15,6 +15,8 @@ namespace AlgorithmsCSharp.RegularExpressions
         }
     }
 
+    //TODO : align with https://dataschool.com/how-to-teach-people-sql/how-regex-works-in-sql/
+
     public class Nfa
     {
         private char[] re;
@@ -24,8 +26,15 @@ namespace AlgorithmsCSharp.RegularExpressions
         private Dictionary<int, HashSet<char>> _setsCharaceterComplementsMap = new();
         private Dictionary<int, List<CharacterRange>> _setsRangesComplementsMap = new();
 
-        public Nfa(string regexp)
+        protected char Wildcard ;
+        protected char AnyCharacter;
+        private const char RangeCharacter = '-';
+
+        public Nfa(string regexp, char wildcard = '*', char anyCharacter = '.')
         {
+            Wildcard = wildcard;
+            AnyCharacter = anyCharacter;
+
             var ops = new Stack<int>();
             re = regexp.ToCharArray();
             M = re.Length;
@@ -64,7 +73,7 @@ namespace AlgorithmsCSharp.RegularExpressions
 
                 if (i < M - 1)
                 {
-                    if (re[i + 1] == '*')
+                    if (re[i + 1] == Wildcard)
                     {
                         G.AddEdge(lp, i + 1);
                         G.AddEdge(i + 1, lp);
@@ -76,7 +85,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                 }
 
 
-                if (new[] { '(', '*', ')', '[', ']', '+' }.Contains(re[i]))
+                if (new[] { '(', Wildcard, ')', '[', ']', '+' }.Contains(re[i]))
                 {
                     G.AddEdge(i, i + 1);
                 }
@@ -96,7 +105,7 @@ namespace AlgorithmsCSharp.RegularExpressions
 
                 for (var indexInBracket = leftSquareBracket + 1; indexInBracket < index; indexInBracket++)
                 {
-                    if (re[indexInBracket + 1] == '-')
+                    if (re[indexInBracket + 1] == RangeCharacter)
                     {
                         rangesToComplement.Add(new CharacterRange(re[indexInBracket], re[indexInBracket + 2]));
                         indexInBracket += 2;
@@ -123,7 +132,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                     }
                 }
 
-                if (re[indexInBracket + 1] == '-')
+                if (re[indexInBracket + 1] == RangeCharacter)
                 {
                     indexInBracket += 2;
                 }
@@ -156,7 +165,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                         {
                             recognizeRangeSet(t, v, match);
                         }
-                        else if (re[v] == t || re[v] == '.')
+                        else if (re[v] == t || re[v] == AnyCharacter)
                         {
                             match.Add(v + 1);
                         }
@@ -173,16 +182,29 @@ namespace AlgorithmsCSharp.RegularExpressions
                         pc.Add(v);
                     }
                 }
+
+                if (pc.Count == 0)
+                {
+                    return false;
+                }
             }
 
-            return pc.Any(v => v == M);
+            foreach (var v in pc)
+            {
+                if (v == M)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void recognizeRangeSet(char t, int v, HashSet<int> states)
         {
             var rightSquareBracketIx = _setsMatchMap.GetValueOrDefault(v);
 
-            if (re[v + 1] == '-')
+            if (re[v + 1] == RangeCharacter)
             {
                 var leftChar = re[v];
                 var rightChar = re[v + 2];
@@ -199,7 +221,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                     states.Add(rightSquareBracketIx);
                 }
             }
-            else if (re[v] == t || re[v] == '.')
+            else if (re[v] == t || re[v] == AnyCharacter)
             {
                 if (!isCharInComplementSet(t, v))
                 {
