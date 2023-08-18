@@ -106,6 +106,26 @@ namespace algorithmsCSharpTests.RegularExpressions
         }
 
         [TestMethod]
+        public void TestNFAOneOrMoreLastCharacter()
+        {
+            var regexp = "CO+";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("CO", true),
+                new("COO", true),
+                new("COOOOO", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
         public void TestNFAOneOrs()
         {
             var regexp = "(AB|CD)";
@@ -137,6 +157,51 @@ namespace algorithmsCSharpTests.RegularExpressions
                 new("EF", true),
                 new("GH", true),
                 new("IJ", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestNFAComplementSet()
+        {
+            var regexp = "[^ABCD]";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("E", true),
+                new("F", true),
+                new("G", true),
+                new("H", true),
+                new("I", true),
+            };
+
+            foreach (var t in list)
+            {
+                var result = nfa.Recognizes(t.Item1);
+                Assert.AreEqual(t.Item2, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestNFAComplementRangeSet()
+        {
+            var regexp = "[^A-D]";
+            var nfa = new Nfa(regexp);
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("A", false),
+                new("E", true),
+                new("F", true),
+                new("G", true),
+                new("H", true),
+                new("I", true),
             };
 
             foreach (var t in list)

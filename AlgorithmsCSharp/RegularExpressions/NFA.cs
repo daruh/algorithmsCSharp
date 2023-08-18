@@ -3,12 +3,26 @@ using AlgorithmsCSharp.Graphs.Directed.Searches;
 
 namespace AlgorithmsCSharp.RegularExpressions
 {
+    class CharacterRange
+    {
+        public char Left { get; }
+        public char Right { get; }
+
+        public CharacterRange(char left, char right)
+        {
+            Left = left;
+            Right = right;
+        }
+    }
+
     public class Nfa
     {
         private char[] re;
         private Digraph G;
         private int M;
         private Dictionary<int, int> _setsMatchMap = new();
+        private Dictionary<int, HashSet<char>> _setsCharaceterComplementsMap = new();
+        private Dictionary<int, List<CharacterRange>> _setsRangesComplementsMap = new();
 
         public Nfa(string regexp)
         {
@@ -27,7 +41,6 @@ namespace AlgorithmsCSharp.RegularExpressions
                 }
                 else if (re[i] == ')')
                 {
-
                     var orOperatorIndexes = new HashSet<int>();
                     while (re[ops.Peek()] == '|')
                     {
@@ -46,17 +59,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                 else if (re[i] == ']')
                 {
                     var leftOperator = ops.Pop();
-
-                    for (int ixInBracket = leftOperator + 1; ixInBracket < i; ixInBracket++)
-                    {
-                        G.AddEdge(leftOperator, ixInBracket);
-
-                        _setsMatchMap.Add(ixInBracket, i);
-                        if (re[ixInBracket + 1] == '-')
-                        {
-                            ixInBracket += 2;
-                        }
-                    }
+                    handleSetRange(leftOperator, i);
                 }
 
                 if (i < M - 1)
@@ -72,9 +75,57 @@ namespace AlgorithmsCSharp.RegularExpressions
                     }
                 }
 
-                if (re[i] == '(' || re[i] == '*' || re[i] == ')' || re[i] == '[' || re[i] == ']'|| re[i]=='+')
+
+                if (new[] { '(', '*', ')', '[', ']', '+' }.Contains(re[i]))
                 {
                     G.AddEdge(i, i + 1);
+                }
+            }
+        }
+
+        private void handleSetRange(int leftSquareBracket, int index)
+        {
+            bool isComplementSet = false;
+            var charactersToComplement = new HashSet<char>();
+            var rangesToComplement = new List<CharacterRange>();
+
+            if (re[leftSquareBracket + 1] == '^')
+            {
+                isComplementSet = true;
+                leftSquareBracket++;
+
+                for (var indexInBracket = leftSquareBracket + 1; indexInBracket < index; indexInBracket++)
+                {
+                    if (re[indexInBracket + 1] == '-')
+                    {
+                        rangesToComplement.Add(new CharacterRange(re[indexInBracket], re[indexInBracket + 2]));
+                        indexInBracket += 2;
+                    }
+                    else
+                    {
+                        charactersToComplement.Add(re[indexInBracket]);
+                    }
+                }
+            }
+
+
+            for (var indexInBracket = leftSquareBracket + 1; indexInBracket < index; indexInBracket++)
+            {
+                G.AddEdge(leftSquareBracket, indexInBracket);
+                _setsMatchMap.Add(indexInBracket, index);
+
+                if (isComplementSet)
+                {
+                    _setsCharaceterComplementsMap.Add(indexInBracket, charactersToComplement);
+                    if (rangesToComplement.Count > 0)
+                    {
+                        _setsRangesComplementsMap.Add(indexInBracket, rangesToComplement);
+                    }
+                }
+
+                if (re[indexInBracket + 1] == '-')
+                {
+                    indexInBracket += 2;
                 }
             }
         }
@@ -103,22 +154,7 @@ namespace AlgorithmsCSharp.RegularExpressions
                     {
                         if (_setsMatchMap.ContainsKey(v))
                         {
-                            if (re[v + 1] == '-')
-                            {
-                                var leftRangeChar = re[v];
-                                var rightRangeChar = re[v + 2];
-
-                                if (t >= leftRangeChar && t <= rightRangeChar)
-                                {
-                                    var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
-                                    match.Add(rightSqBracketIx);
-                                }
-                            }
-                            else if (re[v] == t || re[v] == '.')
-                            {
-                                var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
-                                match.Add(rightSqBracketIx);
-                            }
+                            recognizeRangeSet(t, v, match);
                         }
                         else if (re[v] == t || re[v] == '.')
                         {
@@ -140,6 +176,62 @@ namespace AlgorithmsCSharp.RegularExpressions
             }
 
             return pc.Any(v => v == M);
+        }
+
+        private void recognizeRangeSet(char t, int v, HashSet<int> states)
+        {
+            var rightSquareBracketIx = _setsMatchMap.GetValueOrDefault(v);
+
+            if (re[v + 1] == '-')
+            {
+                var leftChar = re[v];
+                var rightChar = re[v + 2];
+
+                if (leftChar <= t && t <= rightChar)
+                {
+                    if (!isCharInComplementSet(t, v))
+                    {
+                        states.Add(rightSquareBracketIx);
+                    }
+                }
+                else if (_setsCharaceterComplementsMap.ContainsKey(v) && !isCharInComplementSet(t, v))
+                {
+                    states.Add(rightSquareBracketIx);
+                }
+            }
+            else if (re[v] == t || re[v] == '.')
+            {
+                if (!isCharInComplementSet(t, v))
+                {
+                    states.Add(rightSquareBracketIx);
+                }
+            }
+            else if (_setsCharaceterComplementsMap.ContainsKey(v) && !isCharInComplementSet(t, v))
+            {
+                states.Add(rightSquareBracketIx);
+            }
+        }
+
+        private bool isCharInComplementSet(char t, int v)
+        {
+            if (_setsCharaceterComplementsMap.ContainsKey(v) &&
+                _setsCharaceterComplementsMap.GetValueOrDefault(v).Contains(t))
+            {
+                return true;
+            }
+
+            if (_setsRangesComplementsMap.ContainsKey(v))
+            {
+                foreach (var rangeComplement in _setsRangesComplementsMap.GetValueOrDefault(v))
+                {
+                    if (rangeComplement.Left <= t && t <= rangeComplement.Right)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
