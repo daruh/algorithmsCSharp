@@ -8,6 +8,7 @@ namespace AlgorithmsCSharp.RegularExpressions
         private char[] re;
         private Digraph G;
         private int M;
+        private Dictionary<int, int> _setsMatchMap = new();
 
         public Nfa(string regexp)
         {
@@ -20,7 +21,7 @@ namespace AlgorithmsCSharp.RegularExpressions
             for (var i = 0; i < M; i++)
             {
                 var lp = i;
-                if (re[i] == '(' || re[i] == '|')
+                if (re[i] == '(' || re[i] == '|' || re[i] == '[')
                 {
                     ops.Push(i);
                 }
@@ -38,16 +39,27 @@ namespace AlgorithmsCSharp.RegularExpressions
                         lp = or;
                     }
                 }
+                //match Set
+                else if (re[i] == ']')
+                {
+                    var leftOperator = ops.Pop();
+
+                    for (int ixInBracket = leftOperator + 1; ixInBracket < i; ixInBracket++)
+                    {
+                        G.AddEdge(leftOperator, ixInBracket);
+                        _setsMatchMap.Add(ixInBracket, i);
+                    }
+                }
 
                 if (i < M - 1 && re[i + 1] == '*')
                 {
-                    G.AddEdge(lp,i+1);
-                    G.AddEdge(i+1,lp);
+                    G.AddEdge(lp, i + 1);
+                    G.AddEdge(i + 1, lp);
                 }
 
-                if (re[i] == '(' || re[i] == '*' || re[i] == ')')
+                if (re[i] == '(' || re[i] == '*' || re[i] == ')' || re[i] == '[' || re[i] == ']')
                 {
-                    G.AddEdge(i,i+1);
+                    G.AddEdge(i, i + 1);
                 }
             }
         }
@@ -74,7 +86,12 @@ namespace AlgorithmsCSharp.RegularExpressions
                 {
                     if (v < M)
                     {
-                        if (re[v] == t || re[v] == '.')
+                        if (_setsMatchMap.ContainsKey(v) && (re[v] == t || re[v] == '.'))
+                        {
+                            var rightSqBracketIx = _setsMatchMap.GetValueOrDefault(v);
+                            match.Add(rightSqBracketIx);
+                        }
+                        else if (re[v] == t || re[v] == '.')
                         {
                             match.Add(v + 1);
                         }
