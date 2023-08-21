@@ -312,6 +312,19 @@ namespace algorithmsCSharpTests.RegularExpressions
         }
 
         [TestMethod]
+        public void TestMatchWildcardEnding()
+        {
+            var regexp = "%cd";
+
+            var list = new List<Tuple<string, bool>>
+            {
+                new("abcd", true),
+                new("abce", false),
+            };
+            TestSqlNfa(regexp, list);
+        }
+
+        [TestMethod]
         public void TestDash()
         {
             var regexp = "[-]";
