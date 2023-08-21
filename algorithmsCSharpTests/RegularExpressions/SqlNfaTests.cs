@@ -24,6 +24,28 @@ namespace algorithmsCSharpTests.RegularExpressions
         }
 
         [TestMethod]
+        public void TestEmpty()
+        {
+            var regexp = "";
+            var list = new List<Tuple<string, bool>>
+            {
+                new("", true),
+            };
+            TestSqlNfa(regexp, list);
+        }
+
+        [TestMethod]
+        public void TestWideSpace()
+        {
+            var regexp = " ";
+            var list = new List<Tuple<string, bool>>
+            {
+                new(" ", true),
+            };
+            TestSqlNfa(regexp, list);
+        }
+
+        [TestMethod]
         public void TestSqlNFAAnyTwoChars()
         {
             var regexp = "__";
