@@ -59,6 +59,31 @@ namespace algorithmsCSharpTests.Tries
         }
 
         [TestMethod]
+        public void TestAllKeysTrie()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var prefixesList = trie.AllKeys();
+            CollectionAssert.AreEquivalent(new List<string>() { "she", "sells", "shells", "by", "the", "shore" },
+                prefixesList.ToList());
+        }
+
+        [TestMethod]
         public void TestLongestPrefixes()
         {
             var listOfWords = new List<Tuple<string, int>>()

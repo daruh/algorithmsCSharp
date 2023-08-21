@@ -47,6 +47,10 @@
             return x;
         }
 
+        public IEnumerable<string> AllKeys()
+        {
+            return KeysWithPrefix("");
+        }
         public IEnumerable<string> KeysWithPrefix(string prefix)
         {
             var q = new Queue<string>();
