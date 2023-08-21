@@ -51,6 +51,7 @@
         {
             return KeysWithPrefix("");
         }
+
         public IEnumerable<string> KeysWithPrefix(string prefix)
         {
             var q = new Queue<string>();
@@ -111,6 +112,25 @@
             }
 
             return null;
+        }
+
+        public int Size()
+        {
+            return size(_root);
+        }
+
+        private int size(Node<Value> x)
+        {
+            if (x == null) return 0;
+            var cnt = 0;
+            if (x.Val != null) cnt++;
+
+            for (int i = 0; i < 256; i++)
+            {
+                cnt += size(x.Next[i]);
+            }
+
+            return cnt;
         }
     }
 }
