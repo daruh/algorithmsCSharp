@@ -80,5 +80,33 @@
             var c = s[d];
             return search(x.Next[c], s, d + 1, length);
         }
+
+        public void Delete(string key)
+        {
+            _root = delete(_root, key, 0);
+        }
+
+        private Node<Value> delete(Node<Value> x, string key, int d)
+        {
+            if (x == null) return null;
+            if (d == key.Length)
+            {
+                x.Val = default;
+            }
+            else
+            {
+                var c = key[d];
+                x.Next[c] = delete(x.Next[c], key, d + 1);
+            }
+
+            if (x.Val != null) return x;
+
+            for (int i = 0; i < 256; i++)
+            {
+                if (x.Next[i] != null) return x;
+            }
+
+            return null;
+        }
     }
 }

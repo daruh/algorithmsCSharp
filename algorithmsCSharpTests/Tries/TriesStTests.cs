@@ -54,7 +54,8 @@ namespace algorithmsCSharpTests.Tries
             }
 
             var prefixesList = trie.KeysWithPrefix("");
-            CollectionAssert.AreEquivalent(new List<string>(){ "she" , "sells" , "shells" , "by" , "the" , "shore" },prefixesList.ToList());
+            CollectionAssert.AreEquivalent(new List<string>() { "she", "sells", "shells", "by", "the", "shore" },
+                prefixesList.ToList());
         }
 
         [TestMethod]
@@ -79,6 +80,33 @@ namespace algorithmsCSharpTests.Tries
 
             var longestPrefix = trie.LongestPrefixOf("shell");
             Assert.AreEqual("she", longestPrefix);
+        }
+
+        [TestMethod]
+        public void TestDeleteKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var key = "she";
+
+            Assert.IsNotNull(trie.Get(key));
+            trie.Delete(key);
+            Assert.IsNull(trie.Get(key));
         }
     }
 }
