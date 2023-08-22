@@ -309,5 +309,41 @@ namespace AlgorithmsCSharp.Tries
             if (x.Right == null) return x;
             return max(x.Right);
         }
+
+        public string Select(int index)
+        {
+            //TODO throw exception if size exceeded
+            return select(_root, index, "");
+        }
+
+        private string select(TrieNode<Value> x, int index, string prefix)
+        {
+            if (x == null) return null;
+            var leftSubtree = getTreeSize(x.Left);
+            var tstSize = leftSubtree + x.Size;
+
+            if (index < leftSubtree)
+            {
+                return select(x.Left, index, prefix);
+            }
+
+            if (index > tstSize)
+            {
+                return select(x.Right, index - tstSize, prefix);
+            }
+
+            index -= leftSubtree;
+            if (x.Val != null)
+            {
+                if (index == 0)
+                {
+                    return prefix + x.C;
+                }
+
+                index--;
+            }
+
+            return select(x.Mid, index, prefix + x.C);
+        }
     }
 }
