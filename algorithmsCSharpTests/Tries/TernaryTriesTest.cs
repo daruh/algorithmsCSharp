@@ -39,5 +39,136 @@ namespace algorithmsCSharpTests.Tries
                 Assert.AreEqual(value, word.Item2);
             }
         }
+
+        [TestMethod]
+        public void TestTrieSizeManyBranch()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("are", 12),
+                new("by", 4),
+                new("sea", 14),
+                new("shells", 15),
+                new("she", 10),
+                new("shore", 7),
+                new("surely", 13),
+                new("sure", 0),
+                new("the", 8),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+            var value = trie.GetTreeSize();
+            Assert.AreEqual(listOfWords.Count,value);
+        }
+        [TestMethod]
+        public void TestTrie2Branches()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("shells", 15),
+                new("shellsware", 15),
+                new("shellsing", 15),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+            var value = trie.GetTreeSize();
+            Assert.AreEqual(listOfWords.Count, value);
+        }
+
+        [TestMethod]
+        public void TestTrieWithPrefixBuild()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("are", 12),
+                new("by", 4),
+                new("sea", 14),
+                new("shells", 15),
+                new("she", 10),
+                new("shore", 7),
+                new("surely", 13),
+                new("sure", 0),
+                new("the", 8),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var keysWithPrefix = trie.KeysWithPrefix("sure");
+
+            CollectionAssert.AreEquivalent(new List<string>() { "surely", "sure" }, keysWithPrefix.ToList());
+        }
+
+
+        [TestMethod]
+        public void TestTrieWithPrefixBuild2()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("are", 12),
+                new("by", 4),
+                new("sea", 14),
+                new("shells", 15),
+                new("she", 10),
+                new("shore", 7),
+                new("surely", 13),
+                new("sure", 0),
+                new("the", 8),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var keysWithPrefix = trie.KeysWithPrefix("sh");
+
+            CollectionAssert.AreEquivalent(new List<string>() { "shells", "she", "shore" }, keysWithPrefix.ToList());
+        }
+
+
+        [TestMethod]
+        public void TestTrieKeys()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("are", 12),
+                new("by", 4),
+                new("sea", 14),
+                new("shells", 15),
+                new("she", 10),
+                new("shore", 7),
+                new("surely", 13),
+                new("sure", 0),
+                new("the", 8),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var keysWithPrefix = trie.Keys();
+
+            CollectionAssert.AreEquivalent(new List<string>() { "are", "by", "sea", "shells", "she", "shore", "surely", "sure", "the" }, keysWithPrefix.ToList());
+        }
     }
 }
