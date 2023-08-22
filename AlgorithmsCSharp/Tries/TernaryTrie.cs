@@ -163,7 +163,7 @@ namespace AlgorithmsCSharp.Tries
             if (x == null) return length;
             if (x.Val != null && x.C == word[d])
             {
-                length = d+1;
+                length = d + 1;
             }
 
             var c = word[d];
@@ -178,12 +178,75 @@ namespace AlgorithmsCSharp.Tries
                 return search(x.Right, word, d, length);
             }
 
-            if (d < word.Length-1)
+            if (d < word.Length - 1)
             {
                 return search(x.Mid, word, d + 1, length);
             }
 
             return length;
+        }
+
+        public void Delete(string key)
+        {
+            if (!Contains(key))
+            {
+                return;
+            }
+
+            _root = delete(_root, key, 0);
+        }
+
+
+        private TrieNode<Value> delete(TrieNode<Value> x, string key, int d)
+        {
+            if (x == null)
+            {
+                return null;
+            }
+
+            if (d == key.Length - 1)
+            {
+                x.Size -= 1;
+                x.Val = default(Value);
+            }
+            else
+            {
+                var c = key[d];
+                if (c < x.C)
+                {
+                    x.Left = delete(x.Left, key, d);
+                }
+                else if (c > x.C)
+                {
+                    x.Right = delete(x.Right, key, d);
+                }
+                else
+                {
+                    x.Size -= 1;
+                    x.Mid = delete(x.Mid, key, d + 1);
+                }
+            }
+
+            if (x.Size == 0)
+            {
+                if (x.Left == null && x.Right == null)
+                {
+                    return null;
+                }else if (x.Left == null)
+                {
+                    return x.Right;
+                }else if (x.Right == null)
+                {
+                    return x.Left;
+                }
+                else
+                {
+                    
+                }
+
+            }
+
+            return x;
         }
     }
 }

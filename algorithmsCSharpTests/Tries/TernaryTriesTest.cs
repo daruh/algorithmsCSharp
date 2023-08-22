@@ -87,6 +87,68 @@ namespace algorithmsCSharpTests.Tries
         }
 
         [TestMethod]
+        public void TestTrieDeletePostFix()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("shells", 15),
+                new("shellsware", 15),
+                new("shellsing", 15),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            trie.Delete("shellsware");
+            trie.Delete("shellsing");
+            trie.Delete("shells");
+
+            var value = trie.Keys();
+            Assert.AreEqual(0, value.Count());
+        }
+
+        [TestMethod]
+        public void TestTrieDeleteRandom()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("are", 12),
+                new("by", 4),
+                new("sea", 14),
+                new("shells", 15),
+                new("she", 10),
+                new("shore", 7),
+                new("surely", 13),
+                new("sure", 0),
+                new("the", 8),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            trie.Delete("shells");
+            trie.Delete("she");
+            trie.Delete("shore");
+            trie.Delete("are");
+            trie.Delete("by");
+            trie.Delete("sea");
+            trie.Delete("surely");
+            trie.Delete("the");
+            trie.Delete("sure");
+
+            var value = trie.Keys();
+            Assert.AreEqual(0, value.Count());
+        }
+
+        [TestMethod]
         public void TestTrieLongestPrefix1()
         {
             var listOfWords = new List<Tuple<string, int>>()
