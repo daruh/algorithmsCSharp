@@ -235,8 +235,37 @@ namespace algorithmsCSharpTests.Tries
             for (int i = 0; i < listOfWords.Count; i++)
             {
                 var value = trie.Select(i);
-                Assert.IsTrue(listOfWords.Exists(a => a.Item1 == value),$"Faile index {i}");
+                Assert.IsTrue(listOfWords.Exists(a => a.Item1 == value), $"Faile index {i}");
             }
+        }
+
+        [TestMethod]
+        public void TestTrenaryIndexOf()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("surely", 13),
+                new("sells", 15),
+                new("shells", 19),
+                new("by", 4),
+                new("sea", 14),
+                new("she", 10),
+                new("shore", 7),
+                new("sure", 0),
+                new("the", 8),
+                new("are", 12),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+
+            var value = trie.IndexOf("are");
+            Assert.AreEqual(0, value);
         }
 
         [TestMethod]

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.Design;
+using System.Text;
 using System.Xml.XPath;
 
 namespace AlgorithmsCSharp.Tries
@@ -344,6 +345,47 @@ namespace AlgorithmsCSharp.Tries
             }
 
             return select(x.Mid, index, prefix + x.C);
+        }
+
+        public int IndexOf(string key)
+        {
+            return indexOf(_root, key, 0, 0);
+        }
+
+        private int indexOf(TrieNode<Value> x, string key, int d, int size)
+        {
+            if (x == null)
+            {
+                return size;
+            }
+
+            var c = key[d];
+            if (c < x.C)
+            {
+                return indexOf(x.Left, key, d, size);
+            }
+
+            if (c > x.C)
+            {
+                if (x.Val != null)
+                {
+                    size++;
+                }
+
+                return getTreeSize(x.Left) + getTreeSize(x.Mid) + indexOf(x.Right, key, d, size);
+            }
+
+            if (d < key.Length - 1)
+            {
+                if (x.Val != null)
+                {
+                    size++;
+                }
+
+                return getTreeSize(x.Left) + indexOf(x.Mid, key, d + 1, size);
+            }
+
+            return getTreeSize(x.Left) + size;
         }
     }
 }
