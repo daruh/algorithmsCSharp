@@ -62,10 +62,11 @@ namespace algorithmsCSharpTests.Tries
             {
                 trie.Put(val.Item1, val.Item2);
             }
+
             var value = trie.GetTreeSize();
-            Assert.AreEqual(listOfWords.Count,value);
+            Assert.AreEqual(listOfWords.Count, value);
         }
-        
+
         [TestMethod]
         public void TestTrie2Branches()
         {
@@ -82,6 +83,7 @@ namespace algorithmsCSharpTests.Tries
             {
                 trie.Put(val.Item1, val.Item2);
             }
+
             var value = trie.GetTreeSize();
             Assert.AreEqual(listOfWords.Count, value);
         }
@@ -149,6 +151,34 @@ namespace algorithmsCSharpTests.Tries
         }
 
         [TestMethod]
+        public void TestTrieMinimum()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("surely", 13),
+                new("shells", 15),
+                new("by", 4),
+                new("sea", 14),
+                new("she", 10),
+                new("shore", 7),
+                new("sure", 0),
+                new("the", 8),
+                new("are", 12),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var minKey = trie.MinKey();
+
+            Assert.AreEqual("are", minKey);
+        }
+
+        [TestMethod]
         public void TestTrieLongestPrefix1()
         {
             var listOfWords = new List<Tuple<string, int>>()
@@ -164,6 +194,7 @@ namespace algorithmsCSharpTests.Tries
             {
                 trie.Put(val.Item1, val.Item2);
             }
+
             var value = trie.LongestPrefixOf("shellswa");
             Assert.AreEqual("shells", value);
         }
@@ -251,7 +282,9 @@ namespace algorithmsCSharpTests.Tries
 
             var keysWithPrefix = trie.Keys();
 
-            CollectionAssert.AreEquivalent(new List<string>() { "are", "by", "sea", "shells", "she", "shore", "surely", "sure", "the" }, keysWithPrefix.ToList());
+            CollectionAssert.AreEquivalent(
+                new List<string>() { "are", "by", "sea", "shells", "she", "shore", "surely", "sure", "the" },
+                keysWithPrefix.ToList());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Xml.XPath;
+﻿using System.Text;
+using System.Xml.XPath;
 
 namespace AlgorithmsCSharp.Tries
 {
@@ -232,21 +233,52 @@ namespace AlgorithmsCSharp.Tries
                 if (x.Left == null && x.Right == null)
                 {
                     return null;
-                }else if (x.Left == null)
+                }
+                else if (x.Left == null)
                 {
                     return x.Right;
-                }else if (x.Right == null)
+                }
+                else if (x.Right == null)
                 {
                     return x.Left;
                 }
                 else
                 {
-                    
+                    //TODO is there a use case to handle?
                 }
-
             }
 
             return x;
+        }
+
+        public string MinKey()
+        {
+            var minNode = min(_root);
+
+            var builder = new StringBuilder();
+            builder.Append(minNode.C);
+
+            while (minNode != null)
+            {
+                minNode = minNode.Mid;
+
+                while (minNode?.Left != null)
+                {
+                    minNode = minNode.Left;
+                }
+
+                if (minNode != null)
+                    builder.Append(minNode.C);
+            }
+
+            return builder.ToString();
+        }
+
+
+        private TrieNode<Value> min(TrieNode<Value> x)
+        {
+            if (x.Left == null) return x;
+            return min(x.Left);
         }
     }
 }
