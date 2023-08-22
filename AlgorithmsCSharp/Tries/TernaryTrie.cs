@@ -280,5 +280,34 @@ namespace AlgorithmsCSharp.Tries
             if (x.Left == null) return x;
             return min(x.Left);
         }
+
+        public string MaxKey()
+        {
+            var maxNode = max(_root);
+
+            var builder = new StringBuilder();
+            builder.Append(maxNode.C);
+
+            while (maxNode != null)
+            {
+                maxNode = maxNode.Mid;
+
+                while (maxNode?.Right != null)
+                {
+                    maxNode = maxNode.Right;
+                }
+
+                if (maxNode != null)
+                    builder.Append(maxNode.C);
+            }
+
+            return builder.ToString();
+        }
+
+        private TrieNode<Value> max(TrieNode<Value> x)
+        {
+            if (x.Right == null) return x;
+            return max(x.Right);
+        }
     }
 }

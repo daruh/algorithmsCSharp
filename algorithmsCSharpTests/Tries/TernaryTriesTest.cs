@@ -179,6 +179,34 @@ namespace algorithmsCSharpTests.Tries
         }
 
         [TestMethod]
+        public void TestTrieMaximum()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("surely", 13),
+                new("shells", 15),
+                new("by", 4),
+                new("sea", 14),
+                new("she", 10),
+                new("shore", 7),
+                new("sure", 0),
+                new("the", 8),
+                new("are", 12),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var minKey = trie.MaxKey();
+
+            Assert.AreEqual("the", minKey);
+        }
+
+        [TestMethod]
         public void TestTrieLongestPrefix1()
         {
             var listOfWords = new List<Tuple<string, int>>()
