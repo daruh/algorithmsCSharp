@@ -1,5 +1,4 @@
-﻿
-using System.Xml.XPath;
+﻿using System.Xml.XPath;
 
 namespace AlgorithmsCSharp.Tries
 {
@@ -77,7 +76,7 @@ namespace AlgorithmsCSharp.Tries
 
             if (c < x.C)
             {
-                x.Left = put(x.Left, key, val, d,isNewKey);
+                x.Left = put(x.Left, key, val, d, isNewKey);
             }
             else if (c > x.C)
             {
@@ -145,12 +144,46 @@ namespace AlgorithmsCSharp.Tries
 
         private int getTreeSize(TrieNode<Value> x)
         {
-            if(x==null) return 0;
+            if (x == null) return 0;
             var size = x.Size;
             size += getTreeSize(x.Left);
             size += getTreeSize(x.Right);
 
             return size;
+        }
+
+        public string LongestPrefixOf(string word)
+        {
+            var length = search(_root, word, 0, 0);
+            return word.Substring(0, length);
+        }
+
+        private int search(TrieNode<Value> x, string word, int d, int length)
+        {
+            if (x == null) return length;
+            if (x.Val != null && x.C == word[d])
+            {
+                length = d+1;
+            }
+
+            var c = word[d];
+
+            if (c < x.C)
+            {
+                return search(x.Left, word, d, length);
+            }
+
+            if (c > x.C)
+            {
+                return search(x.Right, word, d, length);
+            }
+
+            if (d < word.Length-1)
+            {
+                return search(x.Mid, word, d + 1, length);
+            }
+
+            return length;
         }
     }
 }

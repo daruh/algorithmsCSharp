@@ -65,6 +65,7 @@ namespace algorithmsCSharpTests.Tries
             var value = trie.GetTreeSize();
             Assert.AreEqual(listOfWords.Count,value);
         }
+        
         [TestMethod]
         public void TestTrie2Branches()
         {
@@ -83,6 +84,26 @@ namespace algorithmsCSharpTests.Tries
             }
             var value = trie.GetTreeSize();
             Assert.AreEqual(listOfWords.Count, value);
+        }
+
+        [TestMethod]
+        public void TestTrieLongestPrefix1()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("shells", 15),
+                new("shellsware", 15),
+                new("shellsing", 15),
+            };
+
+            var trie = new TernaryTrie<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+            var value = trie.LongestPrefixOf("shellswa");
+            Assert.AreEqual("shells", value);
         }
 
         [TestMethod]
