@@ -4,20 +4,20 @@ using System.Xml.XPath;
 
 namespace AlgorithmsCSharp.Tries
 {
-    public class TrieNode<Value>
-    {
-        public char C;
-        public Value? Val { get; set; }
-
-        public int Size { get; set; }
-        public TrieNode<Value> Left { get; set; }
-        public TrieNode<Value> Mid { get; set; }
-        public TrieNode<Value> Right { get; set; }
-    }
-
     public class TernaryTrie<Value>
     {
-        private TrieNode<Value> _root;
+        private class Node<Value>
+        {
+            public char C;
+            public Value? Val { get; set; }
+
+            public int Size { get; set; }
+            public Node<Value> Left { get; set; }
+            public Node<Value> Mid { get; set; }
+            public Node<Value> Right { get; set; }
+        }
+
+        private Node<Value> _root;
 
         public Value Get(string key)
         {
@@ -30,7 +30,7 @@ namespace AlgorithmsCSharp.Tries
             return node.Val;
         }
 
-        private TrieNode<Value> get(TrieNode<Value> x, string key, int d)
+        private Node<Value> get(Node<Value> x, string key, int d)
         {
             if (x == null) return null;
             var c = key[d];
@@ -65,12 +65,12 @@ namespace AlgorithmsCSharp.Tries
         }
 
 
-        private TrieNode<Value> put(TrieNode<Value> x, string key, Value val, int d, bool isNewKey)
+        private Node<Value> put(Node<Value> x, string key, Value val, int d, bool isNewKey)
         {
             var c = key[d];
             if (x == null)
             {
-                x = new TrieNode<Value>
+                x = new Node<Value>
                 {
                     C = c,
                 };
@@ -124,7 +124,7 @@ namespace AlgorithmsCSharp.Tries
             return queue;
         }
 
-        private void collect(TrieNode<Value> x, string prefix, Queue<string> q)
+        private void collect(Node<Value> x, string prefix, Queue<string> q)
         {
             if (x == null) return;
 
@@ -144,7 +144,7 @@ namespace AlgorithmsCSharp.Tries
             return getTreeSize(_root);
         }
 
-        private int getTreeSize(TrieNode<Value> x)
+        private int getTreeSize(Node<Value> x)
         {
             if (x == null) return 0;
             var size = x.Size;
@@ -160,7 +160,7 @@ namespace AlgorithmsCSharp.Tries
             return word.Substring(0, length);
         }
 
-        private int search(TrieNode<Value> x, string word, int d, int length)
+        private int search(Node<Value> x, string word, int d, int length)
         {
             if (x == null) return length;
             if (x.Val != null && x.C == word[d])
@@ -199,7 +199,7 @@ namespace AlgorithmsCSharp.Tries
         }
 
 
-        private TrieNode<Value> delete(TrieNode<Value> x, string key, int d)
+        private Node<Value> delete(Node<Value> x, string key, int d)
         {
             if (x == null)
             {
@@ -276,7 +276,7 @@ namespace AlgorithmsCSharp.Tries
         }
 
 
-        private TrieNode<Value> min(TrieNode<Value> x)
+        private Node<Value> min(Node<Value> x)
         {
             if (x.Left == null) return x;
             return min(x.Left);
@@ -305,7 +305,7 @@ namespace AlgorithmsCSharp.Tries
             return builder.ToString();
         }
 
-        private TrieNode<Value> max(TrieNode<Value> x)
+        private Node<Value> max(Node<Value> x)
         {
             if (x.Right == null) return x;
             return max(x.Right);
@@ -317,7 +317,7 @@ namespace AlgorithmsCSharp.Tries
             return select(_root, index, "");
         }
 
-        private string select(TrieNode<Value> x, int index, string prefix)
+        private string select(Node<Value> x, int index, string prefix)
         {
             if (x == null) return null;
             var leftSubtree = getTreeSize(x.Left);
@@ -352,7 +352,7 @@ namespace AlgorithmsCSharp.Tries
             return indexOf(_root, key, 0, 0);
         }
 
-        private int indexOf(TrieNode<Value> x, string key, int d, int size)
+        private int indexOf(Node<Value> x, string key, int d, int size)
         {
             if (x == null)
             {

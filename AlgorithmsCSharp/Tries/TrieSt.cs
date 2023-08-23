@@ -2,14 +2,14 @@
 
 namespace AlgorithmsCSharp.Tries
 {
-    public class Node<Value>
-    {
-        public Value? Val { get; set; }
-        public Node<Value>[] Next = new Node<Value>[TrieSt<Value>.R];
-    }
-
     public class TrieSt<Value>
     {
+        private class Node<Value>
+        {
+            public Value? Val { get; set; }
+            public Node<Value>[] Next = new Node<Value>[TrieSt<Value>.R];
+        }
+
         public static int R = 256;
         private Node<Value> _root;
 
