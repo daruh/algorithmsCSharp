@@ -265,6 +265,14 @@
             return prefix;
         }
 
+        public void DeleteMinKey()
+        {
+            var minKey = MinKey();
+            Delete(minKey);
+        }
+
+
+
 
     }
 }
