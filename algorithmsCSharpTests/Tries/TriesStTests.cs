@@ -332,7 +332,9 @@ namespace algorithmsCSharpTests.Tries
             }
 
             var floor = trie.Floor("shells");
-            Assert.AreEqual("she", floor);
+            Assert.AreEqual("shells", floor);
+            var floor2 = trie.Floor("shift");
+            Assert.AreEqual("shells", floor2);
         }
 
         [TestMethod]
@@ -356,8 +358,8 @@ namespace algorithmsCSharpTests.Tries
                 trie.Put(val.Item1, val.Item2);
             }
 
-            var floor=trie.Floor("cba");
-            Assert.AreEqual("caa",floor);
+            var floor=trie.Floor("fga");
+            Assert.AreEqual("dca",floor);
         }
     }
 }

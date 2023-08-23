@@ -1,4 +1,6 @@
-﻿namespace AlgorithmsCSharp.Tries
+﻿using System;
+
+namespace AlgorithmsCSharp.Tries
 {
     public class Node<Value>
     {
@@ -277,12 +279,15 @@
             Delete(maxKey);
         }
 
+        // Returns the highest key in the symbol table smaller than or equal to key.
         public string Floor(string key)
         {
-            return floor(_root, key, 0, "", null);
+            return floor(_root, key, 0, "", null, true);
         }
 
-        private string floor(Node<Value> x, string key, int digit, string prefix, string lastKeyFound)
+        //
+        private string floor(Node<Value> x, string key, int digit, string prefix, string lastKeyFound,
+            bool mustBeEqualDigit)
         {
             if (x == null)
                 return null;
@@ -292,14 +297,14 @@
                 return lastKeyFound;
             }
 
-            if (x.Val != null && prefix != key)
+            if (x.Val != null)
             {
                 lastKeyFound = prefix;
             }
 
             char currentChar;
 
-            if (digit < key.Length)
+            if (mustBeEqualDigit && digit < key.Length)
             {
                 currentChar = key[digit];
             }
@@ -314,9 +319,14 @@
 
                 if (nextNode != null)
                 {
-                    lastKeyFound = floor(nextNode, key, digit + 1, prefix + nextChar, lastKeyFound);
+                    if (nextChar < currentChar)
+                    {
+                        mustBeEqualDigit = false;
+                    }
 
-                    if (lastKeyFound!=null &&lastKeyFound != key)
+                    lastKeyFound = floor(nextNode, key, digit + 1, prefix + nextChar, lastKeyFound, mustBeEqualDigit);
+
+                    if (lastKeyFound != null)
                     {
                         return lastKeyFound;
                     }
