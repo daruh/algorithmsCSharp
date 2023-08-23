@@ -2,13 +2,13 @@
 {
     public class Node<Value>
     {
-        private static int R = 256;
         public Value? Val { get; set; }
-        public Node<Value>[] Next = new Node<Value>[R];
+        public Node<Value>[] Next = new Node<Value>[TrieSt<Value>.R];
     }
 
     public class TrieSt<Value>
     {
+        public static int R = 256;
         private Node<Value> _root;
 
 
@@ -65,7 +65,7 @@
             if (x == null) return;
             if (x.Val != null) queue.Enqueue(prefix);
 
-            for (var c = 0; c < 256; c++)
+            for (var c = 0; c < R; c++)
             {
                 Collect(x.Next[c], prefix + (char)c, queue);
             }
@@ -106,7 +106,7 @@
 
             if (x.Val != null) return x;
 
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < R; i++)
             {
                 if (x.Next[i] != null) return x;
             }
@@ -125,12 +125,54 @@
             var cnt = 0;
             if (x.Val != null) cnt++;
 
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < R; i++)
             {
                 cnt += size(x.Next[i]);
             }
 
             return cnt;
+        }
+
+        public string Select(int index)
+        {
+            if (index < 0 || index > size(_root))
+            {
+                throw new IndexOutOfRangeException("index is out of bounds");
+            }
+
+            return select(_root, index, "");
+        }
+
+        private string select(Node<Value> x, int index, string prefix)
+        {
+            if (x == null)
+                return null;
+
+            if (x.Val != null)
+            {
+                if (index == 0)
+                {
+                    return prefix;
+                }
+
+                index--;
+            }
+
+            for (int i = 0; i < R; i++)
+            {
+                var nextNode = x.Next[i];
+                if (nextNode != null)
+                {
+                    if (index < size(nextNode))
+                    {
+                        return select(nextNode, index, prefix+(char)i);
+                    }
+
+                    index -= size(nextNode);
+                }
+            }
+
+            return null;
         }
     }
 }

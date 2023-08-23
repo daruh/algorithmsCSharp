@@ -52,7 +52,8 @@ namespace algorithmsCSharpTests.Tries
             {
                 trie.Put(val.Item1, val.Item2);
             }
-            Assert.AreEqual(6,trie.Size());
+
+            Assert.AreEqual(6, trie.Size());
         }
 
         [TestMethod]
@@ -154,6 +155,33 @@ namespace algorithmsCSharpTests.Tries
             Assert.IsNotNull(trie.Get(key));
             trie.Delete(key);
             Assert.IsNull(trie.Get(key));
+        }
+
+        [TestMethod]
+        public void TestSelectKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            for (int i = 0; i < listOfWords.Count; i++)
+            {
+                var select = trie.Select(i);
+                CollectionAssert.Contains(listOfWords.Select(t => t.Item1).ToList(), select);
+            }
         }
     }
 }
