@@ -340,5 +340,55 @@ namespace AlgorithmsCSharp.Tries
 
             return lastKeyFound;
         }
+
+        // Returns the highest key in the symbol table smaller than or equal to key.
+        public string Ceilling(string key)
+        {
+            return ceilling(_root, key, 0, "", true);
+        }
+
+        private string ceilling(Node<Value> x, string key, int digit, string prefix, bool mustBeEqualOrDigit)
+        {
+            if (x == null)
+            {
+                return null;
+            }
+
+            if (x.Val != null && prefix.CompareTo(key) >= 0)
+            {
+                return prefix;
+            }
+
+            char currentChar;
+
+            if (mustBeEqualOrDigit && digit < key.Length)
+            {
+                currentChar = key[digit];
+            }
+            else
+            {
+                currentChar = (char)0;
+            }
+
+            for (var nextChar = currentChar; nextChar < R; nextChar++)
+            {
+                if (x.Next[nextChar] != null)
+                {
+                    if (nextChar > currentChar)
+                    {
+                        mustBeEqualOrDigit = false;
+                    }
+
+                    var keyFound = ceilling(x.Next[nextChar], key, digit + 1, prefix + nextChar, mustBeEqualOrDigit);
+
+                    if (keyFound != null)
+                    {
+                        return keyFound;
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 }

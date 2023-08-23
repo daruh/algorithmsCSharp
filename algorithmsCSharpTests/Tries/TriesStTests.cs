@@ -361,5 +361,32 @@ namespace algorithmsCSharpTests.Tries
             var floor=trie.Floor("fga");
             Assert.AreEqual("dca",floor);
         }
+
+
+        [TestMethod]
+        public void TestCeilingWords()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var floor = trie.Ceilling("shel");
+            Assert.AreEqual("shells", floor);
+            var floor2 = trie.Floor("sells");
+            Assert.AreEqual("sells", floor2);
+        }
     }
 }
