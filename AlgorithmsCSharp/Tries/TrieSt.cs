@@ -212,5 +212,31 @@
 
             return indexOf(x.Next[c], key, digit + 1, size);
         }
+
+        public string MinKey()
+        {
+            return min(_root, "");
+        }
+
+        private string min(Node<Value> x, string prefix)
+        {
+            if (x.Val != null)
+            {
+                return prefix;
+            }
+
+            int i = 0;
+            while (i < R && x.Next[i] == null)
+            {
+                i++;
+            }
+
+            if (x.Next[i] != null)
+            {
+                return min(x.Next[i], prefix + (char)i);
+            }
+
+            return prefix;
+        }
     }
 }
