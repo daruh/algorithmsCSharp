@@ -251,8 +251,8 @@
                 return prefix;
             }
 
-            int i = R-1;
-            while (i >=0 && x.Next[i] == null)
+            int i = R - 1;
+            while (i >= 0 && x.Next[i] == null)
             {
                 i--;
             }
@@ -277,6 +277,58 @@
             Delete(maxKey);
         }
 
+        public string Floor(string key)
+        {
+            return floor(_root, key, 0, "", null);
+        }
 
+        private string floor(Node<Value> x, string key, int digit, string prefix, string lastKeyFound)
+        {
+            if (x == null)
+                return null;
+
+            if (prefix.CompareTo(key) > 0)
+            {
+                return lastKeyFound;
+            }
+
+            if (x.Val != null && prefix != key)
+            {
+                lastKeyFound = prefix;
+            }
+
+            char currentChar;
+
+            if (digit < key.Length)
+            {
+                currentChar = key[digit];
+            }
+            else
+            {
+                currentChar = (char)(R - 1);
+            }
+
+            for (var nextChar = currentChar;; nextChar--)
+            {
+                var nextNode = x.Next[nextChar];
+
+                if (nextNode != null)
+                {
+                    lastKeyFound = floor(nextNode, key, digit + 1, prefix + nextChar, lastKeyFound);
+
+                    if (lastKeyFound!=null &&lastKeyFound != key)
+                    {
+                        return lastKeyFound;
+                    }
+                }
+
+                if (nextChar == 0)
+                {
+                    break;
+                }
+            }
+
+            return lastKeyFound;
+        }
     }
 }

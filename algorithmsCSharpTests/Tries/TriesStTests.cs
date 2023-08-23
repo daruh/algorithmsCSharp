@@ -309,5 +309,55 @@ namespace algorithmsCSharpTests.Tries
             trie.DeleteMaxKey();
             Assert.AreEqual(listOfWords.Count - 1, trie.Size());
         }
+
+
+        [TestMethod]
+        public void TestFloorWords()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var floor = trie.Floor("shells");
+            Assert.AreEqual("she", floor);
+        }
+
+        [TestMethod]
+        public void TestFloorKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("dca", 3),
+                new("dba", 3),
+                new("cba", 3),
+                new("caa", 3),
+                new("baa", 3),
+                new("aaa", 3),
+               
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var floor=trie.Floor("cba");
+            Assert.AreEqual("caa",floor);
+        }
     }
 }
