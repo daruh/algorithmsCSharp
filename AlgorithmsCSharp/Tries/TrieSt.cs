@@ -165,7 +165,7 @@
                 {
                     if (index < size(nextNode))
                     {
-                        return select(nextNode, index, prefix+(char)i);
+                        return select(nextNode, index, prefix + (char)i);
                     }
 
                     index -= size(nextNode);
@@ -173,6 +173,44 @@
             }
 
             return null;
+        }
+
+        public int IndexOf(string key)
+        {
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            return indexOf(_root, key, 0, 0);
+        }
+
+        private int indexOf(Node<Value> x, string key, int digit, int size)
+        {
+            if (x == null || digit == key.Length)
+            {
+                return size;
+            }
+
+            if (x.Val != null)
+            {
+                if (digit < key.Length)
+                {
+                    size++;
+                }
+                else
+                {
+                    return size;
+                }
+            }
+
+            var c = key[digit];
+            for (var i = 0; i < c; i++)
+            {
+                size += this.size(x.Next[i]);
+            }
+
+            return indexOf(x.Next[c], key, digit + 1, size);
         }
     }
 }

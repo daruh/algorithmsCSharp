@@ -183,5 +183,32 @@ namespace algorithmsCSharpTests.Tries
                 CollectionAssert.Contains(listOfWords.Select(t => t.Item1).ToList(), select);
             }
         }
+
+        [TestMethod]
+        public void TestIndexOfKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            foreach (var t in listOfWords)
+            {
+                var index = trie.IndexOf(t.Item1);
+                Assert.IsTrue(index < listOfWords.Count);
+            }
+        }
     }
 }
