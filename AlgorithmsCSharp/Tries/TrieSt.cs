@@ -238,5 +238,33 @@
 
             return prefix;
         }
+
+        public string MaxKey()
+        {
+            return max(_root, "");
+        }
+
+        private string max(Node<Value> x, string prefix)
+        {
+            if (x.Val != null)
+            {
+                return prefix;
+            }
+
+            int i = R-1;
+            while (i >=0 && x.Next[i] == null)
+            {
+                i--;
+            }
+
+            if (x.Next[i] != null)
+            {
+                return max(x.Next[i], prefix + (char)i);
+            }
+
+            return prefix;
+        }
+
+
     }
 }

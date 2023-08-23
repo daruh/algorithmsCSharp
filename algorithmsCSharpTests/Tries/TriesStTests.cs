@@ -235,5 +235,29 @@ namespace algorithmsCSharpTests.Tries
             var minKey = trie.MinKey();
             Assert.AreEqual("by", minKey);
         }
+
+        [TestMethod]
+        public void TestMaximumKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            var minKey = trie.MaxKey();
+            Assert.AreEqual("the", minKey);
+        }
     }
 }
