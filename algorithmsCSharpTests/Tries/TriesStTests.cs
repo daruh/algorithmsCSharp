@@ -284,5 +284,30 @@ namespace algorithmsCSharpTests.Tries
             trie.DeleteMinKey();
             Assert.AreEqual(listOfWords.Count-1, trie.Size());
         }
+
+        [TestMethod]
+        public void TestDeleteMaxKey()
+        {
+            var listOfWords = new List<Tuple<string, int>>()
+            {
+                new("she", 3),
+                new("sells", 5),
+                new("shells", 6),
+                new("by", 2),
+                new("the", 3),
+                new("shore", 5),
+            };
+
+            var trie = new TrieSt<object>();
+
+            foreach (var val in listOfWords)
+            {
+                trie.Put(val.Item1, val.Item2);
+            }
+
+            Assert.AreEqual(listOfWords.Count, trie.Size());
+            trie.DeleteMaxKey();
+            Assert.AreEqual(listOfWords.Count - 1, trie.Size());
+        }
     }
 }

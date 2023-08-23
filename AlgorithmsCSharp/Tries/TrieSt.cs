@@ -271,7 +271,11 @@
             Delete(minKey);
         }
 
-
+        public void DeleteMaxKey()
+        {
+            var maxKey = MaxKey();
+            Delete(maxKey);
+        }
 
 
     }
